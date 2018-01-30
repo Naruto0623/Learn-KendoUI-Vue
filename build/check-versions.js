@@ -40,7 +40,7 @@ module.exports = function () {
 
   if (warnings.length) {
     console.log('')
-    console.log(chalk.yellow('To use this template, you must update following to modules:'))
+    console.log(chalk.yellow('要使用这个模板，您必须先安装更新一下模快：'))
     console.log()
 
     for (let i = 0; i < warnings.length; i++) {

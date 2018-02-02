@@ -32,6 +32,7 @@
         :columns="columns"
         :persistSelection='true'
         :noRecords='true'
+        :height="600"
         :messages="message"
         :edit='edit'
         :change='select'>
@@ -68,38 +69,41 @@
             <h4 class="modal-title" style="font-weight: 900;">模态框表格</h4>
           </div>
           <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
-            <kendo-datasource
-              ref="kendoDataSourceModal"
-              :transport-read-url="readUrl"
-              :transport-read-type="'get'"
-              :transport-read-contentType="'application/json; charset=utf-8'"
-              :transport-read-data-type="'jsonp'"
-              :server-paging='true'
-              :server-sorting='true'
-              :server-filtering='true'
-              :transport-parameter-map="parameterMap"
-              :transport-parameter-fields="schemaModelFields"
-              :schema-model-id="'ProductID'"
-              :schema-data="listGrid"
-              :schema-parse="parse"
-              :schema-total="total"
-              :batch='true'
-              :page-size='5'>
-            </kendo-datasource>
-            <kendo-grid
-              :data-source-ref="'kendoDataSourceModal'"
-              :sortable='true'
-              :scrollable='true'
-              :pageable='pageables'
-              :filterable="filterable"
-              :column-menu='columnMenu'
-              :columns="modalColumns"
-              :persistSelection='true'
-              :noRecords='true'
-              :messages="message"
-              :edit='edit'
-              :change='select'>
-            </kendo-grid>
+            <div>
+              <kendo-datasource
+                ref="kendoDataSourceModal"
+                :transport-read-url="readUrl"
+                :transport-read-type="'get'"
+                :transport-read-contentType="'application/json; charset=utf-8'"
+                :transport-read-data-type="'jsonp'"
+                :server-paging='true'
+                :server-sorting='true'
+                :server-filtering='true'
+                :transport-parameter-map="parameterMap"
+                :transport-parameter-fields="schemaModelFields"
+                :schema-model-id="'ProductID'"
+                :schema-data="listGrid"
+                :schema-parse="parse"
+                :schema-total="total"
+                :batch='true'
+                :page-size='5'>
+              </kendo-datasource>
+              <kendo-grid
+                :data-source-ref="'kendoDataSourceModal'"
+                :sortable='true'
+                :scrollable='true'
+                :pageable='pageables'
+                :filterable="filterable"
+                :column-menu='columnMenu'
+                :columns="modalColumns"
+                :persistSelection='true'
+                :noRecords='true'
+                :height="400"
+                :messages="message"
+                :edit='edit'
+                :change='select'>
+              </kendo-grid>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -398,7 +402,7 @@
               class: "text-center",
               style: "#=Discontinued == true ? 'font-weight: 900;font-size: 24px;' : '' #"
             },
-            template: "<span>#=UnitPrice+ '元' # </span>"
+            template: "<span>#=UnitPrice + '元' # </span>"
           },
           {
             title: '照片',

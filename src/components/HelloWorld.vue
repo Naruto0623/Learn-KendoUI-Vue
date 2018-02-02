@@ -1,37 +1,113 @@
 <template>
   <div class="hello">
-    <kendo-datasource
-      ref="kendoDataSource"
-      :transport-read-url="readUrl"
-      :transport-read-type="'get'"
-      :transport-read-contentType="'application/json; charset=utf-8'"
-      :transport-read-data-type="'jsonp'"
-      :server-paging='true'
-      :server-sorting='true'
-      :server-filtering='true'
-      :transport-parameter-map="parameterMap"
-      :transport-parameter-fields="schemaModelFields"
-      :schema-model-id="'ProductID'"
-      :schema-data="listGrid"
-      :schema-parse="parse"
-      :schema-total="total"
-      :batch='true'
-      :page-size='5'>
-    </kendo-datasource>
-    <kendo-grid
-      :data-source-ref="'kendoDataSource'"
-      :sortable='true'
-      :scrollable='true'
-      :pageable='pageables'
-      :filterable="filterable"
-      :column-menu='columnMenu'
-      :columns="columns"
-      :persistSelection='true'
-      :noRecords='true'
-      :messages="message"
-      :edit='edit'
-      :change='select'>
-    </kendo-grid>
+    <a class="btn btn-primary" style="margin: 20px auto;" data-toggle="modal" href="#gridModal">
+      点击显示模态框
+    </a>
+    <div>
+      <kendo-datasource
+        ref="kendoDataSource"
+        :transport-read-url="readUrl"
+        :transport-read-type="'get'"
+        :transport-read-contentType="'application/json; charset=utf-8'"
+        :transport-read-data-type="'jsonp'"
+        :server-paging='true'
+        :server-sorting='true'
+        :server-filtering='true'
+        :transport-parameter-map="parameterMap"
+        :transport-parameter-fields="schemaModelFields"
+        :schema-model-id="'ProductID'"
+        :schema-data="listGrid"
+        :schema-parse="parse"
+        :schema-total="total"
+        :batch='true'
+        :page-size='5'>
+      </kendo-datasource>
+      <kendo-grid
+        :data-source-ref="'kendoDataSource'"
+        :sortable='true'
+        :scrollable='true'
+        :pageable='pageables'
+        :filterable="filterable"
+        :column-menu='columnMenu'
+        :columns="columns"
+        :persistSelection='true'
+        :noRecords='true'
+        :messages="message"
+        :edit='edit'
+        :change='select'>
+      </kendo-grid>
+    </div>
+    <!--预览照片-->
+    <div class="modal fade" role="dialog" id="assetImgModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:900px;left: -160px;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <p>照片</p>
+          </div>
+          <div class="modal-body" style="overflow: auto;max-height: 450px;">
+            <div>
+              <img src="" alt="" id="assetUrl" width="100%">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!--<button type="button" class="btn btn-primary" v-if="!isAddD" v-on:click="createDep('使用地')">提交</button>-->
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--模态框表格-->
+    <div class="modal fade" id="gridModal">
+      <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" style="font-weight: 900;">模态框表格</h4>
+          </div>
+          <div class="modal-body" style="max-height: 500px;overflow-y: auto;">
+            <kendo-datasource
+              ref="kendoDataSourceModal"
+              :transport-read-url="readUrl"
+              :transport-read-type="'get'"
+              :transport-read-contentType="'application/json; charset=utf-8'"
+              :transport-read-data-type="'jsonp'"
+              :server-paging='true'
+              :server-sorting='true'
+              :server-filtering='true'
+              :transport-parameter-map="parameterMap"
+              :transport-parameter-fields="schemaModelFields"
+              :schema-model-id="'ProductID'"
+              :schema-data="listGrid"
+              :schema-parse="parse"
+              :schema-total="total"
+              :batch='true'
+              :page-size='5'>
+            </kendo-datasource>
+            <kendo-grid
+              :data-source-ref="'kendoDataSourceModal'"
+              :sortable='true'
+              :scrollable='true'
+              :pageable='pageables'
+              :filterable="filterable"
+              :column-menu='columnMenu'
+              :columns="modalColumns"
+              :persistSelection='true'
+              :noRecords='true'
+              :messages="message"
+              :edit='edit'
+              :change='select'>
+            </kendo-grid>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,15 +177,15 @@
         selectable: "multiple, cell",
         //定义每个字段值的类型，包括可以设置最小/大值，是否可以修改，是否为必填验证等
         schemaModelFields: {
-          ProductID: { editable: false, nullable: true },
-          ProductName: { validation: { required: true } },
-          UnitPrice: { type: 'number', validation: { required: true, min: 1 } },
-          Discontinued: { type: 'boolean' },
-          UnitsInStock: { type: 'number', validation: { min: 0, required: true } }
+          ProductID: {editable: false, nullable: true},
+          ProductName: {validation: {required: true}},
+          UnitPrice: {type: 'number', validation: {required: true, min: 1}},
+          Discontinued: {type: 'boolean'},
+          UnitsInStock: {type: 'number', validation: {min: 0, required: true}}
         },
         //分页配置
         pageables: {
-          //是否有输入框
+          //是否有页码输入框
           input: true,
           //是否为数字
           numeric: true,
@@ -117,8 +193,10 @@
           refresh: true,
           //每页显示条数
           pageSize: 5,
-          //分页下拉框，可调整每页显示条数
-          pageSizes: [5, 10, 50],
+          //显示页码数字，超出显示省略号
+          buttonCount: 5,
+          //可选则每页显示多少条
+          pageSizes: [5, 20, 50, 100],
           //分页信息汉化配置
           messages: {
             display: "{0} - {1} 共 {2} 条数据",
@@ -136,6 +214,7 @@
         message: {
           noRecords: "当前页面上没有数据"
         },
+        //列表列
         columns: [
           //复选框列，必须配合:persistSelection='true'一起使用才能勾选
           {
@@ -152,6 +231,11 @@
               {
                 title: "商品名称",
                 field: "ProductName",
+                //为当前列定义宽度，给每一列都定义宽度后表格会出现X轴滚动条
+                width: 250,
+                headerAttributes: {
+                  style: 'text-align: center;'
+                },
                 attributes: { //给当前列添加属性
                   "class": "table-cell",
                   "style": "text-align: center;color: red; font-size: 14px"
@@ -192,17 +276,155 @@
           },
           {
             title: "价格",
-            field: "UnitPrice"
+            field: "UnitPrice",
+            //定义当前列返回值中不显示html
+            encoded: false,
+            //为当前列的表头th添加样式
+            headerAttributes: {
+              //为当前表头th添加class名
+              class: "text-center",
+              //为当前表头th添加style样式
+              style: 'font-weight: 900'
+            },
+            //为当前列td添加样式，可计算
+            attributes: {
+              class: "text-center",
+              style: "#=Discontinued == true ? 'font-weight: 900;font-size: 24px;' : '' #"
+            },
+            template: "<span>#=UnitPrice+ '元' # </span>"
+          },
+          {
+            title: '照片',
+            field: 'ProductID',
+            //可以为当前列的单元格绑定事件，传参可以把整个一行的数据都传过去
+            template: "<div class='assetImg' onclick='window.openImg(#= kendo.stringify(data) #)' ><img height='50px' width='100%' src=# if(data.ProductID > 1 || data.ProductID == 1){#'http://ezg.lenovo.com.cn:8001/upload/defultImg.png'#} else {#'#: ProductID#'#} #></div>",
+            width: '150px'
           },
           {
             title: "资产编码",
             field: "UnitsInStock"
           },
           {
-            title: "入库单号",
-            field: "Discontinued"
+            title: "商品库存",
+            field: "Discontinued",
+            attributes: {
+              class: "text-center",
+              style: "#=Discontinued == true ? '' : 'color:red;' #"
+            },
+            //定义当前列的模板
+            template: "<strong>#=Discontinued == true ? '有' : '无' # </strong>"
+          }
+        ],
+        modalColumns: [
+          //复选框列，必须配合:persistSelection='true'一起使用才能勾选
+          {
+            selectable: "row",
+            width: "50px"
+          },
+          {
+            title: "基本信息",
+            //可以为每列的标题自定义设置样式，且可以把几列归为一组
+            headerAttributes: {
+              style: 'text-align: center;font-weight:600;'
+            },
+            columns: [
+              {
+                title: "商品名称",
+                field: "ProductName",
+                //为当前列定义宽度，给每一列都定义宽度后表格会出现X轴滚动条
+                width: 250,
+                headerAttributes: {
+                  style: 'text-align: center;'
+                },
+                attributes: { //给当前列添加属性
+                  "class": "table-cell",
+                  "style": "text-align: center;color: red; font-size: 14px"
+                },
+                filterable: {
+                  'multi': true,
+                  'checkAll': true,
+                  //当列为复选框过滤时，复选框里的项可以通过接口请求
+                  dataSource: {}
+                }
+              },
+              {
+                title: "商品价格",
+                field: "UnitPrice",
+                width: 150
+              }
+            ]
+          },
+          {
+            title: "产品售卖信息",
+            //可以为每列的标题自定义设置样式，且可以把几列归为一组
+            headerAttributes: {
+              style: 'text-align: center;font-weight:600;'
+            },
+            columns: [
+              {
+                title: "价格",
+                field: "UnitPrice",
+                width: 150
+              },
+              {
+                title: "资产编码",
+                field: "UnitsInStock",
+                width: 150
+
+              },
+              {
+                title: "入库单号",
+                field: "Discontinued",
+                width: 150
+
+              }
+            ]
+          },
+          {
+            title: "价格",
+            field: "UnitPrice",
+            width: 150,
+            //定义当前列返回值中不显示html
+            encoded: false,
+            //为当前列的表头th添加样式
+            headerAttributes: {
+              //为当前表头th添加class名
+              class: "text-center",
+              //为当前表头th添加style样式
+              style: 'font-weight: 900'
+            },
+            //为当前列td添加样式，可计算
+            attributes: {
+              class: "text-center",
+              style: "#=Discontinued == true ? 'font-weight: 900;font-size: 24px;' : '' #"
+            },
+            template: "<span>#=UnitPrice+ '元' # </span>"
+          },
+          {
+            title: '照片',
+            field: 'ProductID',
+            //可以为当前列的单元格绑定事件，传参可以把整个一行的数据都传过去
+            template: "<div class='assetImg' onclick='window.openImg(#= kendo.stringify(data) #)' ><img height='50px' width='100%' src=# if(data.ProductID > 1 || data.ProductID == 1){#'http://ezg.lenovo.com.cn:8001/upload/defultImg.png'#} else {#'#: ProductID#'#} #></div>",
+            width: '150px'
+          },
+          {
+            title: "资产编码",
+            field: "UnitsInStock",
+            width: 150
+          },
+          {
+            title: "商品库存",
+            field: "Discontinued",
+            width: 150,
+            attributes: {
+              class: "text-center",
+              style: "#=Discontinued == true ? '' : 'color:red;' #"
+            },
+            //定义当前列的模板
+            template: "<strong>#=Discontinued == true ? '有' : '无' # </strong>"
           }
         ]
+
       }
     },
     methods: {
@@ -219,12 +441,12 @@
         return t.length;
       },
       //列表请求参数
-      parameterMap (options, operation) {
+      parameterMap(options, operation) {
         //当设置:server-paging='true',:server-sorting='true'和:server-filtering='true'时
         // options为控件的所有请求参数信息filter，page，pageSize，sort
         if (operation !== 'read' && options.models) {
-          return { models: kendo.stringify(options.models) }
-        }else {
+          return {models: kendo.stringify(options.models)}
+        } else {
           return options;
         }
       },
@@ -255,7 +477,7 @@
         schema: {
           //返回值
           data: function (res) {
-            let data = res.d.results.map(function (item,index,array) {
+            let data = res.d.results.map(function (item, index, array) {
               return {ProductName: item.CustomerID};
             });
             return data;
@@ -265,6 +487,14 @@
       this.columns[1].columns[0].filterable.dataSource = categoryinfoS;
     }
   }
+  $(function () {
+    window.openImg = function openImg(url) {
+      if (!(url == '' || url == null)) {
+        $("#assetUrl").attr('src', url);
+        $("#assetImgModal").modal();
+      }
+    };
+  });
 </script>
 
 <style scoped>

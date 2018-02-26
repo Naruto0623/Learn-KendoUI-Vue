@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
+    <a class="btn btn-primary" v-on:click="openTree">树状图模态框</a>
     <a class="btn btn-primary" style="margin: 20px auto;" data-toggle="modal" href="#gridModal">
-      点击显示模态框
+      表格模态框
     </a>
     <div>
       <kendo-datasource
@@ -34,7 +35,6 @@
         :noRecords='true'
         :height="600"
         :messages="message"
-        :edit='edit'
         :change='select'>
       </kendo-grid>
     </div>
@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <!--模态框表格-->
+    <!--表格模态框-->
     <div class="modal fade" id="gridModal">
       <div class="modal-dialog" style="width: 1000px;">
         <div class="modal-content">
@@ -100,9 +100,35 @@
                 :noRecords='true'
                 :height="400"
                 :messages="message"
-                :edit='edit'
                 :change='select'>
               </kendo-grid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--树状图模态框-->
+    <div class="modal fade" id="modal-tree">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">树状图</h4>
+          </div>
+          <div class="modal-body">
+            <div v-if="isTree" style="padding: 0 20px;overflow-y: auto;max-height: 400px">
+              <kendo-treeview
+                :data-source="treeData"
+                :data-text-field="'text'"
+                :checkboxes="false"
+                :drag-and-drop="false"
+                :auto-scroll="true"
+                @select="onSelect">
+              </kendo-treeview>
             </div>
           </div>
           <div class="modal-footer">
@@ -116,6 +142,13 @@
 </template>
 
 <script>
+  import '@progress/kendo-ui/js/kendo.grid'
+  import '@progress/kendo-ui/js/kendo.treeview'
+  import '@progress/kendo-theme-default/dist/all.css'
+  import { DataSource } from '@progress/kendo-datasource-vue-wrapper'
+  import { Grid } from '@progress/kendo-grid-vue-wrapper'
+  import { TreeView } from '@progress/kendo-treeview-vue-wrapper'
+
   export default {
     name: 'HelloWorld',
     data() {
@@ -181,11 +214,11 @@
         selectable: "multiple, cell",
         //定义每个字段值的类型，包括可以设置最小/大值，是否可以修改，是否为必填验证等
         schemaModelFields: {
-          ProductID: {editable: false, nullable: true},
-          ProductName: {validation: {required: true}},
-          UnitPrice: {type: 'number', validation: {required: true, min: 1}},
-          Discontinued: {type: 'boolean'},
-          UnitsInStock: {type: 'number', validation: {min: 0, required: true}}
+          ProductID: { editable: false, nullable: true },
+          ProductName: { validation: { required: true } },
+          UnitPrice: { type: 'number', validation: { required: true, min: 1 } },
+          Discontinued: { type: 'boolean' },
+          UnitsInStock: { type: 'number', validation: { min: 0, required: true } }
         },
         //分页配置
         pageables: {
@@ -200,7 +233,7 @@
           //显示页码数字，超出显示省略号
           buttonCount: 5,
           //可选则每页显示多少条
-          pageSizes: [5, 20, 50, 100],
+          pageSizes: [ 5, 20, 50, 100 ],
           //分页信息汉化配置
           messages: {
             display: "{0} - {1} 共 {2} 条数据",
@@ -427,44 +460,199 @@
             //定义当前列的模板
             template: "<strong>#=Discontinued == true ? '有' : '无' # </strong>"
           }
-        ]
-
+        ],
+        //树状图数据
+        treeData: {},
+        //树状图选中节点信息
+        checkNode: {
+          id: '',
+          pid: '',
+          name: ''
+        },
+        //是否加载显示树状图
+        isTree: false
       }
+    },
+    components: {
+      'kendo-datasource': DataSource,
+      'kendo-grid': Grid,
+      'kendo-treeview': TreeView
     },
     methods: {
       //获取列表数据
-      listGrid(res) {
+      listGrid( res ) {
         return res;
       },
       //前端自定义转化后端接口数据
-      parse(response) {
+      parse( response ) {
         return response;
       },
       //获取列表总页数
-      total(t) {
+      total( t ) {
         return t.length;
       },
       //列表请求参数
-      parameterMap(options, operation) {
+      parameterMap( options, operation ) {
         //当设置:server-paging='true',:server-sorting='true'和:server-filtering='true'时
         // options为控件的所有请求参数信息filter，page，pageSize，sort
         if (operation !== 'read' && options.models) {
-          return {models: kendo.stringify(options.models)}
+          return { models: kendo.stringify( options.models ) }
         } else {
           return options;
         }
       },
-      edit(options, operation) {
-        console.log(options);
-        console.log(operation);
-        alert('编辑回调');
-      },
+      //选中表格单行事件
       select(options) {
         console.log(options);
         let selectList = [];
         selectList = options.sender.selectedKeyNames();
         console.log(selectList);
-      }
+      },
+      //打开树状图模态框
+      openTree() {
+        $("#modal-tree").modal();
+        this.treeList();
+      },
+      //树状图获取数据
+      treeList() {
+        let list = [
+          {
+            "text": "IT固定资产",
+            "id": "96746e31-df32-4952-b11d-764bc1c5b2dc",
+            "expanded": true,
+            "spritecssclass": "rootfolder",
+            "smallvalue": null,
+            "deprecition": null,
+            "categorycode": 8,
+            "items": [
+              {
+                "text": "服务器",
+                "id": "2c9cffc1-04a3-465a-b358-946cb19693f9",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 1,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "路由交换",
+                "id": "3ad48ab2-6bdf-4b43-9e7b-1b3a547f52b5",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 3,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "存储",
+                "id": "3efa68b6-1546-4153-9aa6-b190cd5fb872",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 2,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "投影",
+                "id": "45c7d05d-2420-4376-a158-9e80218ce0f3",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 5,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "软件",
+                "id": "4f9adb93-a178-4407-9ac3-0aa8439813f8",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 7,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "笔记本",
+                "id": "600c9b7f-686d-418e-87a3-8260e3148e17",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 11,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "打印扫描",
+                "id": "71d53b1e-a633-4265-9953-750f55190fae",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 4,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "显示器",
+                "id": "7333031f-5e62-4b5f-a8b2-8f8c57d97725",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 10,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "台式机",
+                "id": "a4b1ccc3-5367-4eac-8a7b-008fb60a1583",
+                "expanded": true,
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 9,
+                "spritecssclass": "asseticon",
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              },
+              {
+                "text": "办公手机",
+                "id": "dfcac5a0-bd03-4dfa-acbb-69603f30faf5",
+                "expanded": true,
+                "spritecssclass": "asseticon",
+                "smallvalue": null,
+                "deprecition": null,
+                "categorycode": 6,
+                "items": [
+                  {
+                    "text": "2",
+                    "id": "57fcabff-0d65-11e8-8c84-7cd30ac4c634",
+                    "expanded": true,
+                    "smallvalue": null,
+                    "deprecition": null,
+                    "categorycode": 17,
+                    "spritecssclass": "asseticon",
+                    "pid": "dfcac5a0-bd03-4dfa-acbb-69603f30faf5"
+                  }
+                ],
+                "pid": "96746e31-df32-4952-b11d-764bc1c5b2dc"
+              }
+            ],
+            "pid": "0"
+          }
+        ];
+        this.treeData = list;
+        this.isTree = true;
+      },
+      //选中节点获取数据
+      onSelect( ev ) {
+        let dataItem = ev.sender.dataItem( ev.node );
+        this.checkNode.id = dataItem.id;
+        this.checkNode.pid = dataItem.pid;
+        this.checkNode.pid = dataItem.pid;
+        this.checkNode.name = dataItem.text;
+        console.dir( this.checkNode );
+      },
     },
     created() {
       this.readUrl = "https://demos.telerik.com/kendo-ui/service/Products";
@@ -480,27 +668,29 @@
         },
         schema: {
           //返回值
-          data: function (res) {
-            let data = res.d.results.map(function (item, index, array) {
-              return {ProductName: item.CustomerID};
-            });
+          data: function ( res ) {
+            let data = res.d.results.map( function ( item, index, array ) {
+              return { ProductName: item.CustomerID };
+            } );
             return data;
           }
         }
       };
-      this.columns[1].columns[0].filterable.dataSource = categoryinfoS;
+      this.columns[ 1 ].columns[ 0 ].filterable.dataSource = categoryinfoS;
     }
   }
-  $(function () {
-    window.openImg = function openImg(url) {
+  $( function () {
+    window.openImg = function openImg( url ) {
       if (!(url == '' || url == null)) {
-        $("#assetUrl").attr('src', url);
-        $("#assetImgModal").modal();
+        $( "#assetUrl" ).attr( 'src', url );
+        $( "#assetImgModal" ).modal();
       }
     };
-  });
+  } );
 </script>
 
 <style scoped>
-
+  .k-grid td {
+    border-bottom-width: 1px;
+  }
 </style>

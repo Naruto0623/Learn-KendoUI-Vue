@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <h2>{{$store.state.count}}</h2>
     <a class="btn btn-primary" v-on:click="openTree">树状图模态框</a>
     <a class="btn btn-primary" style="margin: 20px auto;" data-toggle="modal" href="#gridModal">
       表格模态框
@@ -34,6 +35,7 @@
         :persistSelection='true'
         :noRecords='true'
         :height="600"
+        :reorderable="true"
         :messages="message"
         :change='select'>
       </kendo-grid>
@@ -148,6 +150,7 @@
   import { DataSource } from '@progress/kendo-datasource-vue-wrapper'
   import { Grid } from '@progress/kendo-grid-vue-wrapper'
   import { TreeView } from '@progress/kendo-treeview-vue-wrapper'
+  import store from '@/vuex/store'
 
   export default {
     name: 'HelloWorld',

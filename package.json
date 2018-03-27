@@ -12,12 +12,14 @@
   "dependencies": {
     "@progress/kendo-datasource-vue-wrapper": "^2018.1.117",
     "@progress/kendo-grid-vue-wrapper": "^2018.1.117",
-    "@progress/kendo-treeview-vue-wrapper": "^2018.1.212",
     "@progress/kendo-theme-default": "^2.47.2",
+    "@progress/kendo-treeview-vue-wrapper": "^2018.1.212",
     "@progress/kendo-ui": "^2018.1.117",
     "jquery": "^3.3.1",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "axios": "^0.17.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

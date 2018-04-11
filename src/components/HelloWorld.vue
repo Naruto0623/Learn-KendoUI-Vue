@@ -2,6 +2,7 @@
   <div class="hello">
     <h2>{{$store.state.count}}</h2>
     <a class="btn btn-primary" v-on:click="openTree">树状图模态框</a>
+    <a class="btn btn-success" v-on:click="refshGrid">刷新</a>
     <a class="btn btn-primary" style="margin: 20px auto;" data-toggle="modal" href="#gridModal">
       表格模态框
     </a>
@@ -25,6 +26,7 @@
         :page-size='5'>
       </kendo-datasource>
       <kendo-grid
+        ref="kendoGrid"
         :data-source-ref="'kendoDataSource'"
         :sortable='true'
         :scrollable='true'
@@ -142,8 +144,8 @@
     </div>
   </div>
 </template>
-
 <script>
+  import axios from 'axios'
   import '@progress/kendo-ui/js/kendo.grid'
   import '@progress/kendo-ui/js/kendo.treeview'
   import '@progress/kendo-theme-default/dist/all.css'
@@ -154,7 +156,7 @@
 
   export default {
     name: 'HelloWorld',
-    data() {
+    data(){
       return {
         //列表加载读取接口
         readUrl: '',
@@ -482,42 +484,54 @@
       'kendo-treeview': TreeView
     },
     methods: {
+      //刷新grid数据
+      refshGrid() {
+        //获取ajax组件节点
+        var kendoData = this.$refs.kendoDataSource.kendoWidget();
+        //刷新数据
+        kendoData.read();
+        kendoData.fetch();
+        //获取表格组件节点
+        var kendoGrid = this.$refs.kendoGrid.kendoWidget();
+        //清楚表格选中数据
+        kendoGrid.clearSelection()
+      },
       //获取列表数据
-      listGrid( res ) {
+      listGrid( res ){
         return res;
       },
       //前端自定义转化后端接口数据
-      parse( response ) {
+      parse( response ){
         return response;
       },
       //获取列表总页数
-      total( t ) {
+      total( t ){
         return t.length;
       },
       //列表请求参数
-      parameterMap( options, operation ) {
+      parameterMap( options, operation ){
         //当设置:server-paging='true',:server-sorting='true'和:server-filtering='true'时
         // options为控件的所有请求参数信息filter，page，pageSize，sort
         if (operation !== 'read' && options.models) {
-          return { models: kendo.stringify( options.models ) }
+          return { models: kendo.stringify(options.models) }
         } else {
           return options;
         }
       },
       //选中表格单行事件
-      select(options) {
+      select( options ){
         console.log(options);
         let selectList = [];
         selectList = options.sender.selectedKeyNames();
         console.log(selectList);
       },
       //打开树状图模态框
-      openTree() {
+      openTree(){
         $("#modal-tree").modal();
         this.treeList();
       },
       //树状图获取数据
-      treeList() {
+      treeList(){
         let list = [
           {
             "text": "IT固定资产",
@@ -648,16 +662,16 @@
         this.isTree = true;
       },
       //选中节点获取数据
-      onSelect( ev ) {
-        let dataItem = ev.sender.dataItem( ev.node );
+      onSelect( ev ){
+        let dataItem = ev.sender.dataItem(ev.node);
         this.checkNode.id = dataItem.id;
         this.checkNode.pid = dataItem.pid;
         this.checkNode.pid = dataItem.pid;
         this.checkNode.name = dataItem.text;
-        console.dir( this.checkNode );
+        console.dir(this.checkNode);
       },
     },
-    created() {
+    created(){
       this.readUrl = "https://demos.telerik.com/kendo-ui/service/Products";
       this.selectUrl = "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders";
       // this.readUrl = "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders";
@@ -671,10 +685,10 @@
         },
         schema: {
           //返回值
-          data: function ( res ) {
-            let data = res.d.results.map( function ( item, index, array ) {
+          data: function ( res ){
+            let data = res.d.results.map(function ( item, index, array ){
               return { ProductName: item.CustomerID };
-            } );
+            });
             return data;
           }
         }
@@ -682,16 +696,15 @@
       this.columns[ 1 ].columns[ 0 ].filterable.dataSource = categoryinfoS;
     }
   }
-  $( function () {
-    window.openImg = function openImg( url ) {
+  $(function (){
+    window.openImg = function openImg( url ){
       if (!(url == '' || url == null)) {
-        $( "#assetUrl" ).attr( 'src', url );
-        $( "#assetImgModal" ).modal();
+        $("#assetUrl").attr('src', url);
+        $("#assetImgModal").modal();
       }
     };
-  } );
+  });
 </script>
-
 <style scoped>
   .k-grid td {
     border-bottom-width: 1px;

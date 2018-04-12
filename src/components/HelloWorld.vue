@@ -153,7 +153,7 @@
   import { Grid } from '@progress/kendo-grid-vue-wrapper'
   import { TreeView } from '@progress/kendo-treeview-vue-wrapper'
   import store from '@/vuex/store'
-
+  var Vm = '';
   export default {
     name: 'HelloWorld',
     data(){
@@ -672,6 +672,8 @@
       },
     },
     created(){
+      //把this赋值给Vue外部的变量
+      Vm = this;
       this.readUrl = "https://demos.telerik.com/kendo-ui/service/Products";
       this.selectUrl = "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders";
       // this.readUrl = "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Orders";
@@ -698,6 +700,8 @@
   }
   $(function (){
     window.openImg = function openImg( url ){
+      //在Vue外部获取this
+      console.log(Vm);
       if (!(url == '' || url == null)) {
         $("#assetUrl").attr('src', url);
         $("#assetImgModal").modal();

@@ -148,7 +148,7 @@
   import axios from 'axios'
   import '@progress/kendo-ui/js/kendo.grid'
   import '@progress/kendo-ui/js/kendo.treeview'
-  import '@progress/kendo-theme-default/dist/all.css'
+  import '@progress/kendo-theme-bootstrap/dist/all.css'
   import { DataSource } from '@progress/kendo-datasource-vue-wrapper'
   import { Grid } from '@progress/kendo-grid-vue-wrapper'
   import { TreeView } from '@progress/kendo-treeview-vue-wrapper'
@@ -291,7 +291,9 @@
               },
               {
                 title: "商品价格",
-                field: "UnitPrice"
+                field: "UnitPrice",
+                //动态通过判断字段值，动态添加单元格class名
+                template: "<span class=# if(data.UnitPrice != 1){#'red'#} #>#:UnitPrice #</span>"
               }
             ]
           },
@@ -339,7 +341,8 @@
             title: '照片',
             field: 'ProductID',
             //可以为当前列的单元格绑定事件，传参可以把整个一行的数据都传过去
-            template: "<div class='assetImg' onclick='window.openImg(#= kendo.stringify(data) #)' ><img height='50px' width='100%' src=# if(data.ProductID > 1 || data.ProductID == 1){#'http://ezg.lenovo.com.cn:8001/upload/defultImg.png'#} else {#'#: ProductID#'#} #></div>",
+            template: "<div class='assetImg' onclick='window.openImg(#= kendo.stringify(data) #)' >" +
+            "<img height='50px' width='100%' src=# if(data.ProductID > 1 || data.ProductID == 1){#'http://ezg.lenovo.com.cn:8001/upload/defultimg.png'#} else {#'#: ProductID#'#} #></div>",
             width: '150px'
           },
           {
@@ -351,6 +354,7 @@
             field: "Discontinued",
             attributes: {
               class: "text-center",
+              //动态通过判断字段值，动态改变单元格样式
               style: "#=Discontinued == true ? '' : 'color:red;' #"
             },
             //定义当前列的模板
@@ -494,7 +498,9 @@
         //获取表格组件节点
         var kendoGrid = this.$refs.kendoGrid.kendoWidget();
         //清楚表格选中数据
-        kendoGrid.clearSelection()
+        kendoGrid.clearSelection();
+        //清楚列过滤中的值
+        kendoGrid.data('kendoFilterMenu').clear();
       },
       //获取列表数据
       listGrid( res ){

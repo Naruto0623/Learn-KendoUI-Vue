@@ -12,7 +12,8 @@
   "dependencies": {
     "@progress/kendo-datasource-vue-wrapper": "^2018.1.117",
     "@progress/kendo-grid-vue-wrapper": "^2018.1.117",
-    "@progress/kendo-theme-default": "^2.47.2",
+    "@progress/kendo-theme-bootstrap": "^2.11.11",
+    "@progress/kendo-theme-default": "^2.50.0",
     "@progress/kendo-treeview-vue-wrapper": "^2018.1.212",
     "@progress/kendo-ui": "^2018.1.117",
     "axios": "^0.17.1",

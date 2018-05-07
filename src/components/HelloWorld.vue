@@ -492,15 +492,13 @@
       refshGrid() {
         //获取ajax组件节点
         var kendoData = this.$refs.kendoDataSource.kendoWidget();
-        //刷新数据
-        kendoData.read();
-        kendoData.fetch();
         //获取表格组件节点
         var kendoGrid = this.$refs.kendoGrid.kendoWidget();
-        //清楚表格选中数据
+        //刷新表格数据
+        kendoData.read();
+        kendoData.fetch();
+        //清除表格选中数据
         kendoGrid.clearSelection();
-        //清楚列过滤中的值
-        kendoGrid.data('kendoFilterMenu').clear();
       },
       //获取列表数据
       listGrid( res ){

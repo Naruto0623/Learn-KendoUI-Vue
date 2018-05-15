@@ -148,7 +148,8 @@
   import axios from 'axios'
   import '@progress/kendo-ui/js/kendo.grid'
   import '@progress/kendo-ui/js/kendo.treeview'
-  import '@progress/kendo-theme-bootstrap/dist/all.css'
+  //除了默认主题，别的两种主题样式跟本项目有兼容问题，其他项目可用
+  import '@progress/kendo-theme-default/dist/all.css'
   import { DataSource } from '@progress/kendo-datasource-vue-wrapper'
   import { Grid } from '@progress/kendo-grid-vue-wrapper'
   import { TreeView } from '@progress/kendo-treeview-vue-wrapper'

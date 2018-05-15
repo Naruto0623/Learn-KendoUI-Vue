@@ -293,7 +293,11 @@
                 title: "商品价格",
                 field: "UnitPrice",
                 //动态通过判断字段值，动态添加单元格class名
-                template: "<span class=# if(data.UnitPrice != 1){#'red'#} #>#:UnitPrice #</span>"
+                template: "<span class=# if(data.UnitPrice != 1){#'red'#} #>#:UnitPrice #</span>",
+                //禁用单列过滤
+                filterable: false,
+                //禁用排序
+                sortable: false
               }
             ]
           },

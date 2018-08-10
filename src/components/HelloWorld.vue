@@ -11,6 +11,7 @@
         ref="kendoDataSource"
         :transport-read-url="readUrl"
         :transport-read-type="'get'"
+        :page="pageInput"
         :transport-read-contentType="'application/json; charset=utf-8'"
         :transport-read-data-type="'jsonp'"
         :server-paging='true'
@@ -159,6 +160,8 @@
     name: 'HelloWorld',
     data(){
       return {
+        //分页框的值
+        pageInput: '',
         //列表加载读取接口
         readUrl: '',
         //每列菜单配置

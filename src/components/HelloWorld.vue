@@ -532,6 +532,15 @@
       },
       //选中表格单行事件
       select( options ){
+      //两种方式
+        var that = options.sender;
+        var selectedRows = options.sender.select();
+        var selectedDataItems = [];
+        for (var i = 0; i < selectedRows.length; i++) {
+          var dataItem = that.dataItem(selectedRows[i]);
+          selectedDataItems.push(dataItem);
+        }
+      
         console.log(options);
         let selectList = [];
         selectList = options.sender.selectedKeyNames();

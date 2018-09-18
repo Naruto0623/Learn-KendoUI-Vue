@@ -146,6 +146,7 @@
   </div>
 </template>
 <script>
+  //autoFitColumn  grid.autoFitColumn("age");
   import axios from 'axios'
   import '@progress/kendo-ui/js/kendo.grid'
   import '@progress/kendo-ui/js/kendo.treeview'
